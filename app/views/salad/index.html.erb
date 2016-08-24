@@ -1,154 +1,142 @@
 <div class="wrapper wrapper-content">
-<div class="container">
   <div class="row">
-      <div class="col-md-2">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-success pull-right">Monthly</span>
-                  <h5>Users</h5>
-              </div>
-              <div class="ibox-content">
-                  <h3 class="no-margins">386,200</h3>
-                  <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-                  <small>Total users</small>
-              </div>
-          </div>
+    <div class="col-md-2">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <span class="label label-success pull-right">Monthly</span>
+          <h5>Users</h5>
+        </div>
+        <div class="ibox-content">
+          <h3 class="no-margins">386,200</h3>
+          <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
+          <small>Total users</small>
+        </div>
       </div>
-      <div class="col-md-2">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-info pull-right">Annual</span>
-                  <h5>Products</h5>
-              </div>
-              <div class="ibox-content">
-                  <h3 class="no-margins">80,800</h3>
-                  <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
-                  <small>New sales</small>
-              </div>
-          </div>
+    </div>
+    <div class="col-md-2">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <span class="label label-info pull-right">Annual</span>
+          <h5>Products</h5>
+        </div>
+        <div class="ibox-content">
+          <h3 class="no-margins">80,800</h3>
+          <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+          <small>New sales</small>
+        </div>
       </div>
-
-      <div class="col-md-4">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <span class="label label-primary pull-right">Weekly</span>
-                  <h5>Total Product Usage</h5>
-              </div>
-              <div class="ibox-content">
-
-                  <div class="row">
-                      <div class="col-md-6">
-                          <h3 class="no-margins">4.7</h3><small>Hours / Week per user</small>
-                          <div class="font-bold text-navy">44% <i class="fa fa-level-up"></i> <small>Rapid pace</small></div>
-                      </div>
-                      <div class="col-md-6">
-                          <h3 class="no-margins">3.4</h3><small>Days / Week per user</small>
-                          <div class="font-bold text-navy">22% <i class="fa fa-level-up"></i> <small>Slow pace</small></div>
-                      </div>
-                  </div>
-              </div>
+    </div>
+    <div class="col-md-4">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <span class="label label-primary pull-right">Weekly</span>
+          <h5>Total Product Usage</h5>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-md-6">
+              <h3 class="no-margins">4.7</h3><small>Hours / Week per user</small>
+              <div class="font-bold text-navy">44% <i class="fa fa-level-up"></i> <small>Rapid pace</small></div>
+            </div>
+            <div class="col-md-6">
+              <h3 class="no-margins">3.4</h3><small>Days / Week per user</small>
+              <div class="font-bold text-navy">22% <i class="fa fa-level-up"></i> <small>Slow pace</small></div>
+            </div>
           </div>
+        </div>
       </div>
-      <div class="col-md-4">
-          <div class="ibox float-e-margins">
-              <div class="ibox-title">
-                  <h5>Monthly income</h5>
-                  <div class="ibox-tools">
-                      <span class="label label-primary">Updated 12.2015</span>
-                  </div>
-              </div>
-              <div class="ibox-content no-padding">
-                  <div class="flot-chart m-t-lg" style="height: 55px;">
-                      <div class="flot-chart-content" id="flot-chart1"></div>
-                  </div>
-              </div>
-
+    </div>
+    <div class="col-md-4">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Monthly income</h5>
+          <div class="ibox-tools">
+            <span class="label label-primary">Updated 12.2015</span>
           </div>
+        </div>
+        <div class="ibox-content no-padding">
+          <div class="flot-chart m-t-lg" style="height: 55px;">
+            <div class="flot-chart-content" id="flot-chart1"></div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
   <div class="row">
     <div class="col-lg-8"><%= render :partial => 'line_chart' %></div>
     <div class="col-lg-4"><%= render :partial => 'inline_table' %></div>
   </div>
   <div class="row">
-    <div class="col-lg-6" ng-controller="frequencyController" ng-init="drawChart({cumulative:true})">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>{{usage}} of Product Usage</h5>
-            </div>
-            <div class="ibox-content">
-                <div>
-                    <canvas id="freqBarChart"></canvas>
-                </div>
-            </div>
-            <div class="bar-chart-footer">
-              <div class="vertical-input">
-                <div class="col-md-4 textbox-wrapper">
-                    <input type="text" id="freqStartWeek"
-                      class="textbox" placeholder="Start Week (yyyy/mm/dd)"
-                        ng-model="input.start" ng-change="drawChart({})"/>
-                </div>
-                <div class="col-md-7 slider-wrapper">
-                  <input type="range" id="freqSlider"
-                    value="4" min="2" max="8" step="1" ng-model="input.range" ng-change="drawChart({})"/>
-                </div>
-                <div class="col-md-1" style="padding:3px;color:#106352;">
-                    +<strong style="padding:4px; font-size:x-large;">{{input.range}}</strong>w
-                </div>
-              </div>
-              <button type="button" id="freqCumulate" ng-click="drawChart({})"
-              data-toggle="button" class="btn btn-w-m btn-primary">Cumulative</button>
-            </div>
+    <div class="col-lg-6" id="freqBarChartWrapper">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>Frequency of Product Usage</h5>
         </div>
-    </div>
-    <div class="col-lg-6" ng-controller="durationController" ng-init="drawChart({cumulative:true})">
+        <div class="ibox-content">
+          <div id="freqBarChartContainer"></div>
+        </div>
+        <div class="bar-chart-footer">
+          <div class="vertical-input">
+            <div class="col-md-4 textbox-wrapper">
+                <input type="text" name="startDate"
+                  class="textbox" placeholder="Start Week (yyyy/mm/dd)"/>
+            </div>
+            <div class="col-md-7 slider-wrapper">
+              <input type="range" name="slider"
+                value="4" min="2" max="8" step="1"/>
+            </div>
+            <div class="col-md-1" style="padding:3px;color:#106352;">
+                +<strong style="padding:4px; font-size:x-large;" name="slider-value">0</strong>w
+            </div>
+          </div>
+            <button type="button" name="cumulative" data-toggle="button"
+              class="btn btn-w-m btn-primary">Cumulative</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" id="durationBarChartWrapper">
         <div class="ibox float-e-margins">
           <div class="ibox-title">
-              <h5>{{usage}} of Product Usage</h5>
+              <h5>Duration of Product Usage</h5>
           </div>
           <div class="ibox-content">
-              <div>
-                  <canvas id="durationBarChart"></canvas>
-              </div>
+            <div id="durationBarChartContainer"></div>
           </div>
-          <div class="bar-chart-footer">
-            <div class="vertical-input">
-              <div class="col-md-4 textbox-wrapper">
-                  <input type="text" id="durationStartWeek" class="textbox">
-              </div>
-              <div class="col-md-7 slider-wrapper">
-                <input type="range" id="durationSlider" value="4" min="2" max="8" step="1"/>
-              </div>
-              <div class="col-md-1" style="padding:3px;color:#106352;">
-                  +<strong style="padding:4px; font-size:x-large;">7</strong>w
-              </div>
+        <div class="bar-chart-footer">
+          <div class="vertical-input">
+            <div class="col-md-4 textbox-wrapper">
+                <input type="text" name="startDate"
+                  class="textbox" placeholder="Start Week (yyyy/mm/dd)"/>
             </div>
-            <button type="button" id="durationCumulate" ng-click="drawChart({})"
-            data-toggle="button" class="btn btn-w-m btn-primary">Cumulative</button>
+            <div class="col-md-7 slider-wrapper">
+              <input type="range" name="slider"
+                value="4" min="2" max="8" step="1"/>
+            </div>
+            <div class="col-md-1" style="padding:3px;color:#106352;">
+                +<strong style="padding:4px; font-size:x-large;" name="slider-value">0</strong>w
+            </div>
+          </div>
+            <button type="button" name="cumulative" data-toggle="button"
+              class="btn btn-w-m btn-primary">Cumulative</button>
           </div>
         </div>
+      </div>
     </div>
     <div class="m-t-md">
-        <small class="pull-right">
-            <i class="fa fa-clock-o"> </i>
-            Update on 16.07.2015
-        </small>
-        <small>
-            <strong>Analysis of sales:</strong> The value has been changed over time, and last month reached a level over $50,000.
-        </small>
+      <small class="pull-right">
+          <i class="fa fa-clock-o"> </i>
+          Update on 16.07.2015
+      </small>
+      <small>
+          <strong>Analysis of sales:</strong> The value has been changed over time, and last month reached a level over $50,000.
+      </small>
     </div>
-  </div>
-  <div class="row" ng-controller="mapController">
-    <div id="world-map" style="height: 300px;"></div>
-  </div>
-  <div class="col-lg-12">
+  <div class="row col-lg-12">
       <div id="world-map" style="height: 300px;"></div>
   </div>
   <div class="row">
     <%= render :partial => 'table' %>
   </div>
-
-</div>
 </div>
 
 <% content_for :javascript do %>
@@ -186,120 +174,128 @@ $(document).ready(function() {
     };
 
   var weekList = toWeeks(raw);
-  console.log(weekList);
 
-  var app = angular.module('app', []);
-  angular.module('app', []).controller('frequencyController', ['$scope', function($scope) {
-    $scope.usage = 'Frequency';
-    $scope.baseWeek = 43;
-    $scope.input = {
-      start: 0,
-      range: 4,
-    };
-    $scope.checkStart = function() {
-      var start = $scope.input.start;
-      if(/\d{4}(\/\d\d){2}/.test(start)){
-        var startWeek = calculateWeek(start, sampleStartDate);
-        if(startWeek <= maxWeek ){
-          $scope.drawChart({start: startWeek});
-        }else{
-          // error -> invalid range
-        }
-        // error -> invalid format
+  function drawFreq(options) {
+    var dataObj = getData($('#freqBarChartWrapper'), weekList, options, countFreq);
+    for(var i = 0, label=[]; i<=(dataObj.end-dataObj.start)*7; i++)
+      label.push(formatFreqX(i));
+    $('#freqBarChartContainer').children().remove();
+    $('#freqBarChartContainer').append("<canvas id='freqBarChart'></canvas>");
+    var freqBarChart = new Chart(document.getElementById('freqBarChart').getContext("2d"))
+      .Bar(
+        getBarData(label, dataObj.data),
+        getBarOptions());
+  }
+  function drawDuration(options) {
+    var dataObj = getData($('#durationBarChartWrapper'), weekList, options, countDuration);
+    for(var i = 0, label=[]; i<=24; i++)
+      label.push(formatDurationX(i));
+    $('#durationBarChartContainer').children().remove();
+    $('#durationBarChartContainer').append("<canvas id='durationBarChart'></canvas>");
+    var durationBarChart = new Chart(document.getElementById("durationBarChart").getContext("2d"))
+          .Bar(
+            getBarData(label, dataObj.data),
+            getBarOptions());
+  }
+  $('#freqBarChartWrapper').find("[name='slider-value']")
+    .html($('#freqBarChartWrapper').find("[name='slider']").val());
+  $('#durationBarChartWrapper').find("[name='slider-value']")
+    .html($('#durationBarChartWrapper').find("[name='slider']").val());
+  var freqOptions = {
+    start: 0,
+    end: function(){
+      return (this.start + parseInt($('#freqBarChartWrapper').find("[name='slider']").val()));
+    },
+    cumulative: true,
+  };
+  drawFreq(freqOptions);
+  $('#freqBarChartWrapper').find("[name='startDate']").on('input', function(e){
+    if(/\d{4}(\/\d\d){2}/.test($(this).val())){
+      var startWeek = calculateWeek($(this).val(), weekList.base);
+      console.log(startWeek);
+      if(startWeek <= weekList.maxWeek && startWeek >= 0){
+        freqOptions.start = startWeek;
+        drawFreq(freqOptions);
+        // drawFreq({ start: startWeek });
+      }else{
+        // error -> invalid range
       }
+      // error -> invalid format
     }
-    $scope.drawChart = function(options) {
-      // var defaults = angular.extend({
-      //   start: function(){
-      //     var start = $scope.input.start;
-      //     if(/\d{4}(\/\d\d){2}/.test(start)){
-      //       var startWeek = getWeek(start, sampleStartDate);
-      //       if(startWeek <= maxWeek){
-      //         return startWeek;
-      //       }else{
-      //         // error -> invalid range
-      //       }
-      //       // error -> invalid format
-      //     }
-      //     return 0;
-      //   },
-      //   end: function(){
-      //     return (this.start() + $scope.input.range);
-      //   },
-      //   cumulative: document.getElementById('freqCumulate').className.includes('active'),
-      // }, options); //( start , end, cum, opt, countFx)
-      // console.log(defaults.start(), defaults.end());
-      // var freq = countFreq(weekList, defaults.start(), defaults.end()),
-      //     data = !defaults.cumulative ? getCumulative(freq) : freq;
-      var dataObj = getData($scope.input, document.getElementById('freqCumulate').className.includes('active'),
-            weekList, options, countFreq());
-      for(var i = 0, label=[]; i<=(dataObj.end-dataObj.start)*7; i++)
-        label.push(formatFreqX(i));
-      var freqBarChart = new Chart(document.getElementById("freqBarChart").getContext("2d"))
-            .Bar(
-              getBarData(label, dataObj.data),
-              getBarOptions());
+  });
+  $('#freqBarChartWrapper').find("[name='cumulative']").on('click', function(e){
+    freqOptions.cumulative = $(this).hasClass('active');
+    drawFreq(freqOptions);
+  });
+  $('#freqBarChartWrapper').find("[name='slider']").on('change', function(e){
+    $('#freqBarChartWrapper').find("[name='slider-value']").html($(this).val());
+    drawFreq(freqOptions);
+  });
+  var durationOptions = {
+    start: 0,
+    end: function(){
+      return (this.start + parseInt($('#durationBarChartWrapper').find("[name='slider']").val()));
+    },
+    cumulative: true,
+  };
+  drawDuration(durationOptions);
+  $('#durationBarChartWrapper').find("[name='startDate']").on('input', function(e){
+    if(/\d{4}(\/\d\d){2}/.test($(this).val())){
+      var startWeek = calculateWeek($(this).val(), weekList.base);
+      console.log(startWeek);
+      if(startWeek <= weekList.maxWeek && startWeek >= 0){
+        durationOptions.start = startWeek;
+        drawDuration(durationOptions);
+        // drawFreq({ start: startWeek });
+      }else{
+        // error -> invalid range
       }
-  }]);
-  angular.module('app').controller('durationController', ['$scope', function($scope) {
-    $scope.usage = 'Duration';
-    $scope.input = {
-      start: 0,
-      range: 4,
-    };
-    $scope.drawChart = function(options) {
-      // var defaults = angular.extend({
-      //   start: 0,
-      //   end: 3,
-      //   cumulative: document.getElementById('durationCumulate').className.includes('active'),
-      // }, options);
-      // var duration = countDuration(weekList, defaults.start, defaults.end),
-      //     data = !defaults.cumulative ? getCumulative(duration) : duration;
-      var dataObj = getData($scope.input, document.getElementById('durationCumulate').className.includes('active'),
-              weekList, options, countDuration());
-      for(var i = 0, label=[]; i<=24; i++)
-        label.push(formatDurationX(i));
-      var durationBarChart = new Chart(document.getElementById("durationBarChart").getContext("2d"))
-            .Bar(
-              getBarData(label, dataObj.data),
-              getBarOptions());
-      }
-    }]);
-    angular.module('app').controller('mapController', ['$scope', function($scope) {
-      var mapData = {
-          "US": 298,
-          "SA": 200,
-          "DE": 220,
-          "FR": 540,
-          "CN": 120,
-          "AU": 760,
-          "BR": 550,
-          "IN": 200,
-          "GB": 120,
-      };
-
-      $('#world-map').vectorMap({
-          map: 'world_mill_en',
-          backgroundColor: "transparent",
-          regionStyle: {
-              initial: {
-                  fill: '#e4e4e4',
-                  "fill-opacity": 0.9,
-                  stroke: 'none',
-                  "stroke-width": 0,
-                  "stroke-opacity": 0
-              }
-          },
-
-          series: {
-              regions: [{
-                  values: mapData,
-                  scale: ["#1ab394", "#22d6b1"],
-                  normalizeFunction: 'polynomial'
-              }]
-          },
-      });
-    }]);
+      // error -> invalid format
+    }
+  });
+  $('#durationBarChartWrapper').find("[name='cumulative']").on('click', function(e){
+    durationOptions.cumulative = $(this).hasClass('active');
+    drawDuration(durationOptions);
+  });
+  $('#durationBarChartWrapper').find("[name='slider']").on('change', function(e){
+    $('#durationBarChartWrapper').find("[name='slider-value']").html($(this).val());
+    drawDuration(durationOptions);
+  });
+    // angular.module('app').controller('mapController', ['$scope', function($scope) {
+    //   var mapData = {
+    //       "US": 298,
+    //       "SA": 200,
+    //       "DE": 220,
+    //       "FR": 540,
+    //       "CN": 120,
+    //       "AU": 760,
+    //       "BR": 550,
+    //       "IN": 200,
+    //       "GB": 120,
+    //   };
+    //
+    //   $('#world-map').vectorMap({
+    //       map: 'world_mill_en',
+    //       backgroundColor: "transparent",
+    //       regionStyle: {
+    //           initial: {
+    //               fill: '#e4e4e4',
+    //               "fill-opacity": 0.9,
+    //               stroke: 'none',
+    //               "stroke-width": 0,
+    //               "stroke-opacity": 0
+    //           }
+    //       },
+    //
+    //       series: {
+    //           regions: [{
+    //               values: mapData,
+    //               scale: ["#1ab394", "#22d6b1"],
+    //               normalizeFunction: 'polynomial'
+    //           }]
+    //       },
+    //   });
+    // }]);
 });
 </script>
 

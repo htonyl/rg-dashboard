@@ -138,11 +138,11 @@ function getBarOptions(){
 }
 function calculateWeek(timeString, init){
     var month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    return ((
-      (parceInt(timeString.substring(0, 4)) - init.y) * 365
-        + month.slice(init.m - 1, parceInt(timeString.substring(5, 7)) - 1).reduce(
+    return Math.floor((
+      (parseInt(timeString.substring(0, 4)) - init.y) * 365
+        + month.slice(init.m - 1, parseInt(timeString.substring(5, 7)) - 1).reduce(
             function(prev, cur){ return prev + cur; }) +
-        + parceInt(timeString.substring(8, 10)) - init.d
+        + parseInt(timeString.substring(8, 10)) - init.d
     ) / 7);
 }
 
@@ -198,7 +198,8 @@ function toWeeks(data){
         y: 2016,
         m: 2,
         d: 4,
-      }
+      },
+      maxWeek: 20,
     };
     for (var userID in data){
       if (!data.hasOwnProperty(userID)) continue; // skip loop if the property is from prototype
@@ -217,27 +218,20 @@ function toWeeks(data){
     return weekList;
   }
 
-function getData(input, cumulate, weekList, options, fn) {
+function getData(wrapper, weekList, options, fn) {
   var base = weekList.base;
-  var params = angular.extend({
-    start: function(){
-      if(/\d{4}(\/\d\d){2}/.test(start)){
-        var startWeek = calculateWeek(input.start, base);
-        if(startWeek <= maxWeek){
-          return startWeek;
-        }else{
-          // error -> invalid range
-        }
-        // error -> invalid format
-      }
-      return 0;
-    },
-    end: function(){
-      return (this.start() + input.range);
-    },
-    cumulate: cumulate,
-  }, options);
-  var nonCumulative = fn(weekList, params.start(), params.end()),
-      data = !params.cumulative ? getCumulative(nonCumulative) : nonCumulative;
-  return { start: params.start(), end: params.end(), data: data };
+  var start = wrapper.find("[name='startDate']").val();
+  var range = wrapper.find("[name='slider']").val();
+  // var cumulative =  wrapper.find("[name='cumulative']").hasClass('active');
+  console.log(options);
+  var params = $.extend({}, options);
+    // start: 0,
+    // end: function(){
+    //   return (this.start + range);
+    // },
+    // cumulative: cumulative,
+
+  var nonCumulative = fn(weekList, params.start, params.end());
+  var data = !params.cumulative ? getCumulative(nonCumulative) : nonCumulative;
+  return { start: params.start, end: params.end(), data: data };
 }
