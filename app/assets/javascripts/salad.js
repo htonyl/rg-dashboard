@@ -101,12 +101,7 @@ $(function () {
 });
 
 // Bar Utils
-function formatFreqX(arg){
-  return arg + " d";
-}
-function formatDurationX(arg){
-  return arg + " h";
-}
+
 function getBarData(labels, data){
   // run multiple datasets
   return {
@@ -235,3 +230,43 @@ function getData(wrapper, weekList, options, fn) {
   var data = !params.cumulative ? getCumulative(nonCumulative) : nonCumulative;
   return { start: params.start, end: params.end(), data: data };
 }
+function formatDurationX(){
+  for(var i = 0, label=[]; i<=24; i++)
+    label.push(i + " h");
+  return label;
+}
+function formatFreqX(start, end){
+  for(var i = 0, label=[]; i<=(end-start)*7; i++)
+    label.push(i + " d");
+  return label;
+}
+function BarChart(members){
+  this.members = members || {};
+  var that = this, m = this.members;
+  // init slider
+  m.wrapper.find("[name='slider-value']")
+    .html(m.wrapper.find("[name='slider']").val());
+  // mount cumulative button listener
+  m.wrapper.find("[name='cumulative']").on('click', function(e){
+    that.drawChart({cumulative: $(this).hasClass('active')});
+  });
+  // mount slider listener
+  m.wrapper.find("[name='slider']").on('change', function(e){
+    m.wrapper.find("[name='slider-value']").html($(this).val());
+    that.drawChart();
+  });
+}
+BarChart.prototype.drawChart = function(options){
+  var m = this.members;
+  // console.log('before', m.custom);
+  m.custom = $.extend(m.custom, options);
+  // console.log('after', m.custom);
+  var dataObj = getData(m.wrapper, m.weekList, m.custom, m.countFunc);
+  label = m.formatX(dataObj.start, dataObj.end);
+  m.container.empty();
+  m.container.append("<canvas id=\'" + m.canvasId + "\'></canvas>");
+  return new Chart(document.getElementById(m.canvasId).getContext("2d"))
+    .Bar(
+      getBarData(label, dataObj.data),
+      getBarOptions());
+};

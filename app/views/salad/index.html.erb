@@ -67,61 +67,8 @@
     <div class="col-lg-4"><%= render :partial => 'inline_table' %></div>
   </div>
   <div class="row">
-    <div class="col-lg-6" id="freqBarChartWrapper">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>Frequency of Product Usage</h5>
-        </div>
-        <div class="ibox-content">
-          <div id="freqBarChartContainer"></div>
-        </div>
-        <div class="bar-chart-footer">
-          <div class="vertical-input">
-            <div class="col-md-4 textbox-wrapper">
-                <input type="text" name="startDate"
-                  class="textbox" placeholder="Start Week (yyyy/mm/dd)"/>
-            </div>
-            <div class="col-md-7 slider-wrapper">
-              <input type="range" name="slider"
-                value="4" min="2" max="8" step="1"/>
-            </div>
-            <div class="col-md-1" style="padding:3px;color:#106352;">
-                +<strong style="padding:4px; font-size:x-large;" name="slider-value">0</strong>w
-            </div>
-          </div>
-            <button type="button" name="cumulative" data-toggle="button"
-              class="btn btn-w-m btn-primary">Cumulative</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6" id="durationBarChartWrapper">
-        <div class="ibox float-e-margins">
-          <div class="ibox-title">
-              <h5>Duration of Product Usage</h5>
-          </div>
-          <div class="ibox-content">
-            <div id="durationBarChartContainer"></div>
-          </div>
-        <div class="bar-chart-footer">
-          <div class="vertical-input">
-            <div class="col-md-4 textbox-wrapper">
-                <input type="text" name="startDate"
-                  class="textbox" placeholder="Start Week (yyyy/mm/dd)"/>
-            </div>
-            <div class="col-md-7 slider-wrapper">
-              <input type="range" name="slider"
-                value="4" min="2" max="8" step="1"/>
-            </div>
-            <div class="col-md-1" style="padding:3px;color:#106352;">
-                +<strong style="padding:4px; font-size:x-large;" name="slider-value">0</strong>w
-            </div>
-          </div>
-            <button type="button" name="cumulative" data-toggle="button"
-              class="btn btn-w-m btn-primary">Cumulative</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <%= render :partial => 'bar_chart', locals: { name: 'freq', title: 'Frequency of Product Usage'} %>
+    <%= render :partial => 'bar_chart', locals: { name: 'duration', title: 'Duration of Product Usage' } %>
     <div class="m-t-md">
       <small class="pull-right">
           <i class="fa fa-clock-o"> </i>
@@ -131,7 +78,7 @@
           <strong>Analysis of sales:</strong> The value has been changed over time, and last month reached a level over $50,000.
       </small>
     </div>
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -142,7 +89,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="row">
     <%= render :partial => 'table' %>
   </div>
@@ -153,156 +100,164 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-  var raw = {
-    '0':[
-      {'day':1,'time':[14,15,16,18]},
-      {'day':2,'time':[12]},
-      {'day':20,'time':[11,13,15,17,19,21]},
-      {'day':21,'time':[12,13]}],
-    '1':[
-      {'day':1,'time':[13,15]},
-      {'day':3,'time':[12,13]},
-      {'day':14,'time':[13,15]},
-      {'day':19,'time':[1,13]}],
-    '3':[
-      {'day':1,'time':[9,10,11,13,15]},
-      {'day':7,'time':[13,15]},
-      {'day':11,'time':[12]}],
-    '7':[
-      {'day':1,'time':[9,10,11,13,15]},
-      {'day':7,'time':[13,15]},
-      {'day':11,'time':[12]}],
-    '102':[
-      {'day':1,'time':[9,10,11,13,15]},
-      {'day':8,'time':[13,15]},
-      {'day':11,'time':[12]}],
-      '111':[{'day':1,'time':[9,10,11,13,15]}],
-      '131':[{'day':1,'time':[9,10,11,13,15]}],
-      '121':[{'day':1,'time':[9,10,11,13,15]}],
-      '111':[],'112':[],'113':[],
+  // var raw = {
+  //   '0':[
+  //     {'day':1,'time':[14,15,16,18]},
+  //     {'day':2,'time':[12]},
+  //     {'day':20,'time':[11,13,15,17,19,21]},
+  //     {'day':21,'time':[12,13]}],
+  //   '1':[
+  //     {'day':1,'time':[13,15]},
+  //     {'day':3,'time':[12,13]},
+  //     {'day':14,'time':[13,15]},
+  //     {'day':19,'time':[1,13]}],
+  //   '3':[
+  //     {'day':1,'time':[9,10,11,13,15]},
+  //     {'day':7,'time':[13,15]},
+  //     {'day':11,'time':[12]}],
+  //   '7':[
+  //     {'day':1,'time':[9,10,11,13,15]},
+  //     {'day':7,'time':[13,15]},
+  //     {'day':11,'time':[12]}],
+  //   '102':[
+  //     {'day':1,'time':[9,10,11,13,15]},
+  //     {'day':8,'time':[13,15]},
+  //     {'day':11,'time':[12]}],
+  //     '111':[{'day':1,'time':[9,10,11,13,15]}],
+  //     '131':[{'day':1,'time':[9,10,11,13,15]}],
+  //     '121':[{'day':1,'time':[9,10,11,13,15]}],
+  //     '111':[],'112':[],'113':[],
+  //   };
+  function dataGenerator(obj){
+    var raw = {};
+    var _ = obj;
+    console.log(_);
+    randTime = function(){
+      for(var j = 1, time = []; j < 24; j++)
+        if(Math.random() > (1 - _.pOfDuration))
+          Math.random() > 0.5 ?
+            time.push(parseInt(12+Math.pow(12, Math.random()))):
+              time.push(parseInt(12-Math.pow(12, Math.random())));
+      return time;
     };
-
+    for(var i = 0, label = [], id = ''; i < _.population; i++){
+      label = [];
+      for(var j = 1; j < _.maxDay; j++){
+        if(Math.random() > (1 - _.pOfFreq)){
+          label.push({
+            day: parseInt(Math.random() * _.maxDay),
+            time: randTime(),
+          });
+        }
+      }
+      raw[String(i)] = label;
+    }
+    return raw;
+  }
+  var raw = dataGenerator({
+    maxDay: 100,
+    population: 300,
+    pOfFreq: 0.4,
+    pOfDuration: 0.6,
+  });
+  // console.log(raw);
   var weekList = toWeeks(raw);
-
-  function drawFreq(options) {
-    var dataObj = getData($('#freqBarChartWrapper'), weekList, options, countFreq);
-    for(var i = 0, label=[]; i<=(dataObj.end-dataObj.start)*7; i++)
-      label.push(formatFreqX(i));
-    $('#freqBarChartContainer').children().remove();
-    $('#freqBarChartContainer').append("<canvas id='freqBarChart'></canvas>");
-    var freqBarChart = new Chart(document.getElementById('freqBarChart').getContext("2d"))
-      .Bar(
-        getBarData(label, dataObj.data),
-        getBarOptions());
-  }
-  function drawDuration(options) {
-    var dataObj = getData($('#durationBarChartWrapper'), weekList, options, countDuration);
-    for(var i = 0, label=[]; i<=24; i++)
-      label.push(formatDurationX(i));
-    $('#durationBarChartContainer').children().remove();
-    $('#durationBarChartContainer').append("<canvas id='durationBarChart'></canvas>");
-    var durationBarChart = new Chart(document.getElementById("durationBarChart").getContext("2d"))
-          .Bar(
-            getBarData(label, dataObj.data),
-            getBarOptions());
-  }
-  $('#freqBarChartWrapper').find("[name='slider-value']")
-    .html($('#freqBarChartWrapper').find("[name='slider']").val());
-  $('#durationBarChartWrapper').find("[name='slider-value']")
-    .html($('#durationBarChartWrapper').find("[name='slider']").val());
-  var freqOptions = {
-    start: 0,
-    end: function(){
-      return (this.start + parseInt($('#freqBarChartWrapper').find("[name='slider']").val()));
+  // console.log(weekList);
+  var freqBarChartElem = new BarChart({
+    wrapper: $('#freqBarChartWrapper'),
+    container: $('#freqBarChartContainer'),
+    canvasId: 'freqBarChart',
+    formatX: formatFreqX,
+    weekList: weekList,
+    countFunc: countFreq,
+    custom: {
+      start: 0,
+      end: function(){
+        return (this.start + parseInt($('#freqBarChartWrapper').find("[name='slider']").val()));
+      },
+      cumulative: true,
     },
-    cumulative: true,
-  };
-  drawFreq(freqOptions);
+  });
+  var durationBarChartElem = new BarChart({
+    wrapper: $('#durationBarChartWrapper'),
+    container: $('#durationBarChartContainer'),
+    canvasId: 'duarationBarChart',
+    formatX: formatDurationX,
+    weekList: weekList,
+    countFunc: countDuration,
+    custom: {
+      start: 0,
+      end: function(){
+        return (this.start + parseInt($('#durationBarChartWrapper').find("[name='slider']").val()));
+      },
+      cumulative: true,
+    },
+  });
+  freqBarChartElem.drawChart();
+  durationBarChartElem.drawChart();
   $('#freqBarChartWrapper').find("[name='startDate']").on('input', function(e){
     if(/\d{4}(\/\d\d){2}/.test($(this).val())){
       var startWeek = calculateWeek($(this).val(), weekList.base);
       console.log(startWeek);
       if(startWeek <= weekList.maxWeek && startWeek >= 0){
-        freqOptions.start = startWeek;
-        drawFreq(freqOptions);
-        // drawFreq({ start: startWeek });
+        freqBarChartElem.drawChart({start: startWeek});
       }else{
         // error -> invalid range
+        console.log("invalid range!!");
       }
       // error -> invalid format
+      console.log("invalid format!!")
     }
   });
-  $('#freqBarChartWrapper').find("[name='cumulative']").on('click', function(e){
-    freqOptions.cumulative = $(this).hasClass('active');
-    drawFreq(freqOptions);
-  });
-  $('#freqBarChartWrapper').find("[name='slider']").on('change', function(e){
-    $('#freqBarChartWrapper').find("[name='slider-value']").html($(this).val());
-    drawFreq(freqOptions);
-  });
-  var durationOptions = {
-    start: 0,
-    end: function(){
-      return (this.start + parseInt($('#durationBarChartWrapper').find("[name='slider']").val()));
-    },
-    cumulative: true,
-  };
-  drawDuration(durationOptions);
   $('#durationBarChartWrapper').find("[name='startDate']").on('input', function(e){
     if(/\d{4}(\/\d\d){2}/.test($(this).val())){
       var startWeek = calculateWeek($(this).val(), weekList.base);
       console.log(startWeek);
       if(startWeek <= weekList.maxWeek && startWeek >= 0){
         durationOptions.start = startWeek;
-        drawDuration(durationOptions);
+        durationBarChartElem.drawChart({start: startWeek});
         // drawFreq({ start: startWeek });
       }else{
         // error -> invalid range
+        console.log("invalid range!!");
       }
       // error -> invalid format
+      console.log("invalid format!!")
     }
   });
-  $('#durationBarChartWrapper').find("[name='cumulative']").on('click', function(e){
-    durationOptions.cumulative = $(this).hasClass('active');
-    drawDuration(durationOptions);
-  });
-  $('#durationBarChartWrapper').find("[name='slider']").on('change', function(e){
-    $('#durationBarChartWrapper').find("[name='slider-value']").html($(this).val());
-    drawDuration(durationOptions);
-  });
 
-  var mapData = {
-    "US": 298,
-    "SA": 200,
-    "DE": 220,
-    "FR": 540,
-    "CN": 120,
-    "AU": 760,
-    "BR": 550,
-    "IN": 200,
-    "GB": 120,
-  };
-
-  $('#world-map').vectorMap({
-    map: 'world_mill_en',
-    backgroundColor: "transparent",
-    regionStyle: {
-      initial: {
-        fill: '#e4e4e4',
-        "fill-opacity": 0.9,
-        stroke: 'none',
-        "stroke-width": 0,
-        "stroke-opacity": 0
-      }
-    },
-    series: {
-      regions: [{
-        values: mapData,
-        scale: ["#1ab394", "#22d6b1"],
-        normalizeFunction: 'polynomial'
-      }]
-    },
-  });
+  // var mapData = {
+  //   "US": 298,
+  //   "SA": 200,
+  //   "DE": 220,
+  //   "FR": 540,
+  //   "CN": 120,
+  //   "AU": 760,
+  //   "BR": 550,
+  //   "IN": 200,
+  //   "GB": 120,
+  // };
+  //
+  // $('#world-map').vectorMap({
+  //   map: 'world_mill_en',
+  //   backgroundColor: "transparent",
+  //   regionStyle: {
+  //     initial: {
+  //       fill: '#e4e4e4',
+  //       "fill-opacity": 0.9,
+  //       stroke: 'none',
+  //       "stroke-width": 0,
+  //       "stroke-opacity": 0
+  //     }
+  //   },
+  //   series: {
+  //     regions: [{
+  //       values: mapData,
+  //       scale: ["#1ab394", "#22d6b1"],
+  //       normalizeFunction: 'polynomial'
+  //     }]
+  //   },
+  // });
 });
 </script>
 

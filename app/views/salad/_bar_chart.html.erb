@@ -1,0 +1,30 @@
+<div class="col-lg-6" id="<%= name + 'BarChartWrapper'%>">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5 style="width:100%;">
+          <%= title %>
+          <span class="pull-right">Customer Base: <%= base = 300 %></span>
+        </h5>
+    </div>
+    <div class="ibox-content">
+      <div id="<%= name + 'BarChartContainer'%>"></div>
+    </div>
+  <div class="bar-chart-footer">
+    <div class="vertical-input">
+      <div class="col-md-4 textbox-wrapper">
+          <input type="text" name="startDate"
+            class="textbox" placeholder="Start Week (yyyy/mm/dd)"/>
+      </div>
+      <div class="col-md-7 slider-wrapper">
+        <input type="range" name="slider"
+          value="4" min="2" max="8" step="1"/>
+      </div>
+      <div class="col-md-1" style="padding:3px;color:#106352;">
+          +<strong style="padding:4px; font-size:x-large;" name="slider-value">0</strong>w
+      </div>
+    </div>
+      <button type="button" name="cumulative" data-toggle="button"
+        class="btn btn-w-m btn-primary">Cumulative</button>
+    </div>
+  </div>
+</div>
