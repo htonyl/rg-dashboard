@@ -67,8 +67,10 @@
     <div class="col-lg-4"><%= render :partial => 'inline_table' %></div>
   </div>
   <div class="row">
-    <%= render :partial => 'bar_chart', locals: { name: 'freq', title: 'Frequency of Product Usage'} %>
-    <%= render :partial => 'bar_chart', locals: { name: 'duration', title: 'Duration of Product Usage' } %>
+    <%= render :partial => 'bar_chart', locals: { name: 'freqPeriod', title: 'Frequency of Product Usage'} %>
+    <%= render :partial => 'bar_chart', locals: { name: 'freqUser', title: 'u Frequency of Product Usage'} %>
+    <%= render :partial => 'bar_chart', locals: { name: 'durationPeriod', title: 'Duration of Product Usage' } %>
+    <%= render :partial => 'bar_chart', locals: { name: 'durationUser', title: 'u Duration of Product Usage' } %>
     <div class="m-t-md">
       <small class="pull-right">
           <i class="fa fa-clock-o"> </i>
@@ -129,9 +131,8 @@ $(document).ready(function() {
   //     '111':[],'112':[],'113':[],
   //   };
   function dataGenerator(obj){
-    var raw = {};
+    var userInfo = {};
     var _ = obj;
-    console.log(_);
     randTime = function(){
       for(var j = 1, time = []; j < 24; j++)
         if(Math.random() > (1 - _.pOfDuration))
@@ -142,65 +143,97 @@ $(document).ready(function() {
     };
     for(var i = 0, label = [], id = ''; i < _.population; i++){
       label = [];
-      for(var j = 1; j < _.maxDay; j++){
+      for(var j = parseInt(Math.random() * _.maxDay); j < _.maxDay; j++){
         if(Math.random() > (1 - _.pOfFreq)){
           label.push({
-            day: parseInt(Math.random() * _.maxDay),
-            time: randTime(),
+            day: j,
+            timeOfDay: randTime(),
           });
         }
       }
-      raw[String(i)] = label;
+      userInfo[String(i)] = {location: 'china', time: label};
     }
-    return raw;
+    return {
+      userInfo: userInfo,
+      baseTime: {
+        y: 2016,
+        m: 2,
+        d: 4,},
+      maxWeek:20,
+    };
   }
   var raw = dataGenerator({
     maxDay: 100,
     population: 300,
-    pOfFreq: 0.4,
+    pOfFreq: 0.3,
     pOfDuration: 0.6,
   });
-  // console.log(raw);
+  console.log(raw);
   var weekList = toWeeks(raw);
   // console.log(weekList);
-  var freqBarChartElem = new BarChart({
-    wrapper: $('#freqBarChartWrapper'),
-    container: $('#freqBarChartContainer'),
-    canvasId: 'freqBarChart',
+  var freqBCPeriodBased = new BarChart({
+    id: 'freqPeriod',
     formatX: formatFreqX,
     weekList: weekList,
-    countFunc: countFreq,
+    countFunc: countFreqPeriodBased,
     custom: {
       start: 0,
       end: function(){
-        return (this.start + parseInt($('#freqBarChartWrapper').find("[name='slider']").val()));
+        return (this.start + parseInt($('#freqPeriodBarChartWrapper').find("[name='slider']").val()));
       },
       cumulative: true,
     },
   });
-  var durationBarChartElem = new BarChart({
-    wrapper: $('#durationBarChartWrapper'),
-    container: $('#durationBarChartContainer'),
-    canvasId: 'duarationBarChart',
+  var freqBCUserBased = new BarChart({
+    id: 'freqUser',
+    formatX: formatFreqX,
+    weekList: weekList,
+    countFunc: countFreqUserBased,
+    custom: {
+      start: 0,
+      end: function(){
+        return (this.start + parseInt($('#freqUserBarChartWrapper').find("[name='slider']").val()));
+      },
+      cumulative: true,
+    },
+  });
+  var duraBCPeriodBased = new BarChart({
+    id: 'durationPeriod',
     formatX: formatDurationX,
     weekList: weekList,
-    countFunc: countDuration,
+    countFunc: countDurationPeriodBased,
     custom: {
       start: 0,
       end: function(){
-        return (this.start + parseInt($('#durationBarChartWrapper').find("[name='slider']").val()));
+        return (this.start + parseInt($('#durationPeriodBarChartWrapper').find("[name='slider']").val()));
       },
       cumulative: true,
     },
   });
-  freqBarChartElem.drawChart();
-  durationBarChartElem.drawChart();
+  var duraBCUserBased = new BarChart({
+    id: 'durationUser',
+    formatX: formatDurationX,
+    weekList: weekList,
+    countFunc: countDurationUserBased,
+    custom: {
+      start: 0,
+      end: function(){
+        return (this.start + parseInt($('#durationUserBarChartWrapper').find("[name='slider']").val()));
+      },
+      cumulative: true,
+    },
+  });
+  freqBCPeriodBased.drawChart();
+  duraBCPeriodBased.drawChart();
+
+  freqBCUserBased.drawChart();
+  duraBCUserBased.drawChart();
   $('#freqBarChartWrapper').find("[name='startDate']").on('input', function(e){
     if(/\d{4}(\/\d\d){2}/.test($(this).val())){
       var startWeek = calculateWeek($(this).val(), weekList.base);
       console.log(startWeek);
       if(startWeek <= weekList.maxWeek && startWeek >= 0){
-        freqBarChartElem.drawChart({start: startWeek});
+        freqBCPeriodBased.drawChart({start: startWeek});
       }else{
         // error -> invalid range
         console.log("invalid range!!");
@@ -215,7 +248,7 @@ $(document).ready(function() {
       console.log(startWeek);
       if(startWeek <= weekList.maxWeek && startWeek >= 0){
         durationOptions.start = startWeek;
-        durationBarChartElem.drawChart({start: startWeek});
+        duraBCPeriodBased.drawChart({start: startWeek});
         // drawFreq({ start: startWeek });
       }else{
         // error -> invalid range

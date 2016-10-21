@@ -151,9 +151,9 @@ function getCumulative(data){
   return cumulative;
 }
 
-function countDuration(data, start, end){
-  var userToDuration = Array(24).fill(0),
-      base = Object.keys(data).length;
+function countDurationPeriodBased(data, start, end){
+  var userToDuration = Array(24).fill(0);
+  var base = Object.keys(data).length;
   for (var userID in data){
     var freqInSpan = 0, durationInSpan = 0;
     for (var week in data[userID]){
@@ -162,70 +162,114 @@ function countDuration(data, start, end){
         durationInSpan+=data[userID][week].duration;
       }
     }
-    if(!durationInSpan) base--; // zero duration is not counted
+    if(!freqInSpan) base--; // zero duration is not counted
+    userToDuration[Math.round(durationInSpan/freqInSpan)]++;
+  }
+  var res = userToDuration.map(function(userCount){
+    return userCount / base;
+  });
+  return res;
+}
+function countDurationUserBased(data, start, end){
+  var userToDuration = Array(24).fill(0);
+  var base = Object.keys(data).length;
+  for (var userID in data){
+    var freqInSpan = 0, durationInSpan = 0;
+    var firstWeek = Number.MAX_SAFE_INTEGER;
+    for (var tmp in data[userID]){
+      tmp = parseInt(tmp);
+      if(tmp < firstWeek) firstWeek = tmp;
+    }
+    for (var week in data[userID]){
+      var weekTransformed = week - firstWeek;
+      if(weekTransformed >= start && weekTransformed <= end){
+        freqInSpan+=data[userID][week].freq;
+        durationInSpan+=data[userID][week].duration;
+      }
+    }
+    if(!freqInSpan) base--; // zero duration is not counted
     userToDuration[Math.round(durationInSpan/freqInSpan)]++;
   }
   return userToDuration.map(function(userCount){
     return userCount / base;
   });
 }
-
-function countFreq(data, start, end){
+// process from toWEEK() or do calculations here
+function countFreqPeriodBased(data, start, end){
+  console.log("countFreq", data, start, end);
+  var base = 0;
   var userToFreq = Array((end-start+1)*7).fill(0);
-  var base = Object.keys(data).length;
   for (var userID in data){
     var freqInSpan = 0;
+    var firstWeek = Number.MAX_SAFE_INTEGER;
+    var lastWeek = Number.MIN_SAFE_INTEGER;
+    for (var tmp in data[userID]){
+      tmp = parseInt(tmp);
+      if(tmp < firstWeek) firstWeek = tmp;
+      if(tmp > lastWeek) lastWeek = tmp;
+    }
+    if(lastWeek < start || firstWeek > end) continue;
     for (var week in data[userID]){
       if(week >= start && week <= end)
         freqInSpan+=data[userID][week].freq;
     }
+    base++;
     userToFreq[freqInSpan]++;
   }
-  return userToFreq.map(function(userCount){
+  var res = userToFreq.map(function(userCount){
     return userCount / base;
   });
+  console.log(res, base);
+  return res;
 }
 
-// {'_userID_':{'_week_':{duration: 3, freq: 1}}}
-function toWeeks(data){
-    var weekList = {
-      base: {
-        y: 2016,
-        m: 2,
-        d: 4,
-      },
-      maxWeek: 20,
-    };
-    for (var userID in data){
-      if (!data.hasOwnProperty(userID)) continue; // skip loop if the property is from prototype
-
-      var _user = weekList[userID] = {};
-      data[userID].forEach(function(record){
-        var week = Math.floor(record.day/7);
-        if(week in _user){
-          _user[week].freq++;
-          _user[week].duration+=record.time.length;
-        }else{
-          _user[week] = {freq: 1, duration: record.time.length};
-        }
-      });
+function countFreqUserBased(data, start, end){
+  var userToFreq = Array((end-start+1)*7).fill(0);
+  var base = Object.keys(data).length;
+  for (var userID in data){
+    var freqInSpan = 0;
+    var firstWeek = Number.MAX_SAFE_INTEGER;
+    for (var tmp in data[userID]){
+      tmp = parseInt(tmp);
+      if(tmp < firstWeek) firstWeek = tmp;
     }
-    return weekList;
+    for (var week in data[userID]){
+      var weekTransformed = week - firstWeek;
+      if(weekTransformed >= start && weekTransformed <= end)
+        freqInSpan+=data[userID][week].freq;
+    }
+    userToFreq[freqInSpan]++;
   }
+  var res = userToFreq.map(function(userCount){
+    return userCount / base;
+  });
+  console.log(res);
+  return res;
+}
+// {'_userID_':{'_week_':{duration: 3, freq: 1}}}
+function toWeeks(raw){
+  var result = {};
+  for (var userID in raw.userInfo){
+    // skip loop if the property is from prototype
+    if (!raw.userInfo.hasOwnProperty(userID)) continue;
+
+    var _user = result[userID] = {};
+    raw.userInfo[userID].time.forEach(function(record){
+      var week = Math.floor(record.day/7);
+      if(week in _user){
+        _user[week].freq++;
+        _user[week].duration+=record.timeOfDay.length;
+      }else{
+        _user[week] = {freq: 1, duration: record.timeOfDay.length};
+      }
+    });
+  }
+  console.log(result);
+  return result;
+}
 
 function getData(wrapper, weekList, options, fn) {
-  var base = weekList.base;
-  var start = wrapper.find("[name='startDate']").val();
-  var range = wrapper.find("[name='slider']").val();
-  // var cumulative =  wrapper.find("[name='cumulative']").hasClass('active');
-  console.log(options);
   var params = $.extend({}, options);
-    // start: 0,
-    // end: function(){
-    //   return (this.start + range);
-    // },
-    // cumulative: cumulative,
-
   var nonCumulative = fn(weekList, params.start, params.end());
   var data = !params.cumulative ? getCumulative(nonCumulative) : nonCumulative;
   return { start: params.start, end: params.end(), data: data };
@@ -243,6 +287,10 @@ function formatFreqX(start, end){
 function BarChart(members){
   this.members = members || {};
   var that = this, m = this.members;
+  // bind elements
+  m.wrapper = $('#'+m.id+'BarChartWrapper');
+  m.container = $('#'+m.id+'BarChartContainer');
+  m.canvasId = m.id+'BarChart';
   // init slider
   m.wrapper.find("[name='slider-value']")
     .html(m.wrapper.find("[name='slider']").val());
