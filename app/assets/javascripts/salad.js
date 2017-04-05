@@ -108,7 +108,7 @@ function getBarData(labels, data){
       labels: labels,
       datasets: [
           {
-              label: "My First dataset",
+              label: "Dataset",
               fillColor: "rgba(220,220,220,0.5)",
               strokeColor: "rgba(220,220,220,0.8)",
               highlightFill: "rgba(220,220,220,0.75)",
@@ -120,15 +120,23 @@ function getBarData(labels, data){
 }
 function getBarOptions(){
   return {
-      scaleBeginAtZero: true,
-      scaleShowGridLines: true,
-      scaleGridLineColor: "rgba(0,0,0,.05)",
-      scaleGridLineWidth: 1,
-      barShowStroke: true,
-      barStrokeWidth: 2,
-      barValueSpacing: 5,
-      barDatasetSpacing: 1,
-      responsive: true,
+    scaleBeginAtZero: true,
+    scaleShowGridLines: true,
+    scaleGridLineColor: "rgba(0,0,0,.05)",
+    scaleGridLineWidth: 1,
+    barShowStroke: true,
+    barStrokeWidth: 2,
+    barValueSpacing: 5,
+    barDatasetSpacing: 1,
+    responsive: true,
+    tooltips: {
+      callbacks: {
+        label: function(tooltipItem, data) {
+          console.log(tooltipItem, data);
+          return data+"€";
+        }
+      }
+    }
   };
 }
 function calculateWeek(timeString, init){
@@ -313,6 +321,7 @@ BarChart.prototype.drawChart = function(options){
   label = m.formatX(dataObj.start, dataObj.end);
   m.container.empty();
   m.container.append("<canvas id=\'" + m.canvasId + "\'></canvas>");
+  console.log(dataObj.data);
   return new Chart(document.getElementById(m.canvasId).getContext("2d"))
     .Bar(
       getBarData(label, dataObj.data),
